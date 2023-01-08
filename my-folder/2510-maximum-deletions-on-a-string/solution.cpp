@@ -24,7 +24,7 @@ public:
             long long int curr=0;
             for(int j=i;j<s.length();j++)
             {
-                curr=(curr+(power*(s[j]-'a'))%mod)%mod;
+                curr=(curr+(power*(s[j]-'a'+1))%mod)%mod;
                 hash[i][j]=curr;
                 power=(power*p)%mod;
             }
