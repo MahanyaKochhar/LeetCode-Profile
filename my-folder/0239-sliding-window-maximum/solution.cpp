@@ -16,13 +16,14 @@ public:
         for(int i=k;i<nums.size();i++)
         {
             ans.push_back(nums[q.front()]);
-            while(!q.empty()&&q.front()<=i-k)
-            {
-                q.pop_front();
-            }
+            
             while(!q.empty()&&nums[q.back()]<nums[i])
             {
                 q.pop_back();
+            }
+            while(!q.empty()&&q.front()<=i-k)
+            {
+                q.pop_front();
             }
             q.push_back(i);
             
