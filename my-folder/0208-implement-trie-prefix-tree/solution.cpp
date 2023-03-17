@@ -1,83 +1,75 @@
 class TrieNode
 {
     public:
-    TrieNode* links[26];
     bool flag;
-    bool contains(char ch)
+    TrieNode* links[26];
+    TrieNode* in(char ch)
     {
-    	if(links[ch-'a']!=NULL)
-    		return true;
-    	else
-    		return false;
+        if(links[ch - 'a'] != NULL)
+        {
+            return links[ch - 'a'];
+        }
+        else
+            links[ch - 'a'] = new TrieNode();
+        return links[ch - 'a'];
     }
-    void set(char ch)
+    void set()
     {
-     links[ch-'a']=new TrieNode();
+        flag = true;
     }
-    TrieNode* getnext(char ch)
+    TrieNode* nxt(char ch)
     {
-    	return links[ch-'a'];
+        return links[ch - 'a'];
     }
-    void setflag()
-    {
-    	flag=true;
-    }
-    bool check()
-    {
-    	return flag;
-    }
-
 };
 class Trie {
 public:
-    TrieNode* root;
+    TrieNode* t;
     Trie()
     {
-        root=new TrieNode();
+        t = new TrieNode();
     }
     
     void insert(string word)
     {
-        TrieNode* node=root;
-        for(int i=0;i<word.length();i++)
+        TrieNode* r = t;
+        for(int i = 0 ; i < word.length() ; i++)
         {
-            if(!node->contains(word[i]))
-            {
-            	node->set(word[i]);
-            }
-            node=node->getnext(word[i]);
-                                   
-                                  
+            char ch = word[i];
+            r = r->in(ch);
         }
-        node->setflag();
+        r->set();
     }
     
     bool search(string word)
     {
-        TrieNode* node=root;
-        for(int i=0;i<word.length();i++)
+        TrieNode* r = t;
+        for(int i = 0 ; i < word.length() ; i++)
         {
-        	if(!node->contains(word[i]))
-        		return false;
-        	node=node->getnext(word[i]);
+            char ch = word[i];
+            r = r->nxt(ch);
+            if(r == NULL)
+                return false;
         }
-        return node->check();
+        if(r->flag == true)
+            return true;
+        else
+            return false;
     }
     
     bool startsWith(string prefix)
     {
-        string word=prefix;
-        TrieNode* node=root;
-         for(int i=0;i<word.length();i++)
+        TrieNode* r = t;
+        for(int i = 0 ; i < prefix.length() ; i++)
         {
-        	if(!node->contains(word[i]))
-        		return false;
-        	node=node->getnext(word[i]);
+            char ch = prefix[i];
+            r = r->nxt(ch);
+            if(r == NULL)
+                return false;
         }
-        return true;
+            return true;
     }
 };
-
 
 /**
  * Your Trie object will be instantiated and called as such:
