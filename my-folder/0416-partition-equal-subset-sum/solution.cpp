@@ -1,41 +1,31 @@
-bool dp[201][20001];
-bool vis[201][20001];
-bool subsetSum(vector<int>nums,int n,int sum)
-{
-    // vis[n][sum]=true;
-    if(n==0)
-    {
-        if(sum==0)
-            return true;
-        else
-            return false;
-    }
-    if(vis[n][sum])
-        return dp[n][sum];
-    if(sum>=nums[n-1])
-        dp[n][sum]=subsetSum(nums,n-1,sum-nums[n-1])||subsetSum(nums,n-1,sum);
-    else
-        dp[n][sum]=subsetSum(nums,n-1,sum);
-        vis[n][sum]=true;
-        return dp[n][sum];
-
-}
 class Solution {
 public:
     bool canPartition(vector<int>& nums)
     {
-        memset(dp,false,sizeof(dp));
-        memset(vis,false,sizeof(vis));
-        int s=0;
-        for(int i=0;i<nums.size();i++)
-        {
-            s+=nums[i];
-        }
-        if(s%2!=0)
+       int sum = 0;
+       for(auto x : nums)
+       {
+            sum += x;
+       }
+       if(sum % 2 != 0)
+       {
             return false;
-        else
-        {
-            return subsetSum(nums,nums.size(),s/2);
-        }
+       }
+       int v = sum / 2;
+       bool dp[201][10001];
+       memset(dp,false,sizeof(dp));
+       dp[0][0] = true;
+       for(int i = 1 ; i <= nums.size() ; i++)
+       {
+            for(int j = 1 ; j <= v ; j++)
+            {
+                dp[i][j] = dp[i - 1][j];
+                if(j - nums[i - 1] >= 0)
+                {
+                    dp[i][j] |= dp[i - 1][j - nums[i - 1]];
+                }
+            }
+       }
+       return dp[nums.size()][v];
     }
 };
