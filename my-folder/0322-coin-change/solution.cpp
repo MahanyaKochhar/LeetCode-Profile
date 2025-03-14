@@ -2,27 +2,26 @@ class Solution {
 public:
     int coinChange(vector<int>& coins, int amount)
     {
-        // int dp[amount+1][coins.size()+1];
-        // memset(dp,INT_MAX,sizeof(dp));
-        vector<vector< int>>dp(amount+1,vector<int>(coins.size()+1,INT_MAX-100));
-        dp[0][0]=0;
-        for(int j=0;j<=amount;j++)
+        int dp[13][10001];
+        for(int i = 0 ; i < 13 ; i++)
         {
-            for(int k=1;k<=coins.size();k++)
+            for(int j = 0 ; j < 10001 ; j++)
             {
-                if(j>=coins[k-1])
-                {
-                    dp[j][k]=min(1+dp[j-coins[k-1]][k],dp[j][k-1]);
-                }
-                else
-                    dp[j][k]=dp[j][k-1];
+                dp[i][j] = 1e9;
             }
-            
         }
-        if(dp[amount][coins.size()]!=INT_MAX-100)
-            return dp[amount][coins.size()];
-        else
-            return -1;
-     
+        dp[0][0] = 0;
+        for(int i = 1 ; i <= coins.size();i++)
+        {
+            for(int j = 0 ; j <= amount ; j++)
+            {
+                dp[i][j] = min(dp[i - 1][j], dp[i][j]);
+                if(j - coins[i - 1] >= 0)
+                {
+                    dp[i][j] = min(dp[i][j], 1 + dp[i][j - coins[i - 1]]);
+                }
+            }
+        }
+        return dp[coins.size()][amount] != 1e9 ? dp[coins.size()][amount] : -1;
     }
 };
