@@ -1,63 +1,42 @@
 class Solution {
 public:
-    string minRemoveToMakeValid(string s) {
-    	int r1=0,r2=0;
-        string p="";
-    	for(int k=0;k<s.length();k++)
-    	{
-    		if(s[k]=='(')
+    string minRemoveToMakeValid(string s)
+    {
+        stack<int>st;
+        set<int>toErase;
+        for(int i = 0 ; i < s.length();i++)
+        {
+            if(s[i] == '(')
             {
-    			r1++;
-                p.push_back(s[k]);
-                }
-            
-    		else if(s[k]==')')
-    		{
-    			if(r1!=0)
-                {
-    				r1--;
-                    p.push_back(s[k]);
-                }
-                
-    			else
-                {
-                    r2++;
-                }
-    		}
-                else
-                    p.push_back(s[k]);
-    	}
-        
-    	string t2="";
-        int r3=0,r4=0;
-        for(int k=p.length()-1;k>=0;k--)
-    	{
-    		if(p[k]==')')
+                st.push(i);
+            }
+            else if(s[i] == ')')
             {
-    			r3++;
-                t2.push_back(p[k]);
-                }
-            
-    		else if(p[k]=='(')
-    		{
-    			if(r3!=0)
+                if(!st.empty())
                 {
-    				r3--;
-                    t2.push_back(p[k]);
+                    st.pop();
                 }
-                    
-    			else
-                {
-                    r4++;
-                }
-    		}
                 else
-                    t2.push_back(p[k]);
-    	}
-        reverse(t2.begin(),t2.end());
-        return t2;
-        
+                {
+                    toErase.insert(i);
+                }
 
-        
+            }
+        }
+        while(!st.empty())
+        {
+            toErase.insert(st.top());
+            st.pop();
+        }
+        string ans = "";
+        for(int i = 0 ; i < s.length();i++)
+        {
+            if(toErase.find(i) != toErase.end())
+            {
+                continue;
+            }
+            ans.push_back(s[i]);
+        }
+        return ans;
     }
 };
