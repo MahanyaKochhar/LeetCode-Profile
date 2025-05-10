@@ -1,25 +1,31 @@
 class Solution {
 public:
-        int dp[501][501];
-    int minDistance(string word1, string word2) {
-        int m=word1.length();
-        int n=word2.length();
-            memset(dp,-1,sizeof(dp));
-        int fin=minans(word1,word2,m,n);
-        return fin;
-    }
-        int minans(string word1,string word2,int m1,int n1)
+    int minDistance(string word1, string word2)
+    {
+        vector<vector<int>>dp(word1.length() + 1,vector<int>(word2.length() + 1,1e6));
+        dp[0][0] = 0;
+        for(int i = 1 ; i <= word2.length();i++)
         {
-                if(m1==0)
-                        return n1;
-                   if(n1==0)
-                   return m1;
-                if(dp[m1][n1]!=-1)
-                                return dp[m1][n1];
-                if(word1[m1-1]==word2[n1-1])
-                        
-                	return dp[m1][n1]=minans(word1,word2,m1-1,n1-1);
-                else
-                return dp[m1][n1]=1+min(minans(word1,word2,m1-1,n1),min(minans(word1,word2,m1,n1-1),minans(word1,word2,m1-1,n1-1)));
+            dp[0][i] = i;
         }
+        for(int i = 1 ; i <= word1.length(); i++)
+        {
+            dp[i][0] = i;
+        }
+        for(int i = 1 ; i <= word1.length() ; i++)
+        {
+            for(int j = 1 ; j <= word2.length();j++)
+            {
+                if(word1[i - 1] == word2[j - 1])
+                {
+                    dp[i][j] = dp[i - 1][j - 1];
+                }
+                else
+                {
+                    dp[i][j] = 1 + min(dp[i - 1][j - 1],min(dp[i - 1][j],dp[i][j - 1]));
+                }
+            }
+        }
+        return dp[word1.length()][word2.length()];
+    }
 };
