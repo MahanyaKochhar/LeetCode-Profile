@@ -1,43 +1,31 @@
 class Solution {
 public:
-    int dp[101];
-    int count=0;
-    int numDecodings(string s) {
-        int n=s.length();
-        memset(dp,-1,sizeof(dp));
-       int ans=no1(s,n,0); 
-        
-        return ans; 
-    }
-   int no1(string s,int n,int pos)
+    int numDecodings(string s)
     {
-        if(pos>=n)
+        vector<int>dp(s.length() + 1,0);
+        dp[0] = 1;
+        if(s[0] != '0')
         {
-            
-            return 1;
+            dp[1] += dp[0];
         }
-       int x=s[pos]-'0';
-         if(x==0)
-         {
-         return 0;
-         }
-       if(dp[pos]!=-1)
-           return dp[pos];
-      
-     if(int(s[pos]-'0')==1&&(pos+1<=n-1)&&int(s[pos+1]-'0')>=0&&int(s[pos+1]-'0')<=9)
+        for(int i = 2 ; i <= s.length();i++)
         {
-           return dp[pos]=no1(s,n,pos+1)+no1(s,n,pos+2);
-            
+            if(s[i - 1] != '0')
+            {
+                dp[i] += dp[i - 1];
+            }
+            if(s[i - 2] != '0')
+            {
+                string tmp = "";
+                tmp.push_back(s[i - 2]);
+                tmp.push_back(s[i - 1]);
+                int x = stoi(tmp);
+                if(x <= 26)
+                {
+                    dp[i] += dp[i - 2];
+                }
+            }
         }
-       else if((int(s[pos]-'0')==2&&(pos+1<=n-1)&&int(s[pos+1]-'0')>=0&&int(s[pos+1]-'0')<=6))
-           return dp[pos]=no1(s,n,pos+1)+no1(s,n,pos+2);
-       
-       
-       
-          else
-        {
-            return dp[pos]=no1(s,n,pos+1);
-        }
-       }
-        
-    };
+        return dp[s.length()];
+    }
+};
