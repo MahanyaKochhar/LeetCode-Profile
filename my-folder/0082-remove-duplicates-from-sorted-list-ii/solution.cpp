@@ -10,37 +10,45 @@
  */
 class Solution {
 public:
-    map<int,int>mp;
-    ListNode* deleteDuplicates(ListNode* head) {
-    countind(head);
-    ListNode* l4=NULL,*l5=NULL;
-    for(auto x:mp)
+    ListNode* deleteDuplicates(ListNode* head)
     {
-    if(x.second==1)
-    {
-    if(l4==NULL)
-    {
-    l4=new ListNode(x.first);
-    l5=l4;
-    }
-    else
-    {
-    ListNode* tmp=new ListNode(x.first);
-    l5->next=tmp;
-    l5=l5->next;
-    }
+        ListNode *curr = NULL;
+        ListNode *ans = NULL;
+        if(head == NULL)
+        {
+            return head;
+        }
+        ListNode *lag = head;
+        ListNode *lead = head;
+        while(lead != NULL)
+        {
+            while(lead != NULL && lead->val == lag->val)
+            {
+                lead = lead->next;
+            }
+            if(lag->next == lead)
+            {
+                if(ans == NULL)
+                {
+                    ans = lag;
+                    curr = lag;
+                }
+                else
+                {
+                    curr->next = lag;
+                    curr = lag;
+                }
+                lag = lag->next;
+            }
+            else
+            {
+                lag = lead;
+            }
+        }
+        if(curr != NULL)
+            curr->next = NULL;
+        return ans;
 
-    }
-    }
-    return l4;
-    }
 
-
-       void countind(ListNode* head) 
-       {
-       if(head==NULL)
-        return;
-        mp[head->val]++;
-        deleteDuplicates(head->next);
     }
 };
