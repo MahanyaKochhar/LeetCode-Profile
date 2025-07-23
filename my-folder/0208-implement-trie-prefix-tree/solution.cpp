@@ -1,73 +1,67 @@
 class TrieNode
 {
     public:
+    vector<TrieNode*> links{26};
     bool flag;
-    TrieNode* links[26];
-    TrieNode* in(char ch)
-    {
-        if(links[ch - 'a'] != NULL)
-        {
-            return links[ch - 'a'];
-        }
-        else
-            links[ch - 'a'] = new TrieNode();
-        return links[ch - 'a'];
-    }
-    void set()
-    {
-        flag = true;
-    }
-    TrieNode* nxt(char ch)
-    {
-        return links[ch - 'a'];
-    }
 };
 class Trie {
+TrieNode* root;
 public:
-    TrieNode* t;
     Trie()
     {
-        t = new TrieNode();
+        root = new TrieNode();
     }
     
     void insert(string word)
     {
-        TrieNode* r = t;
-        for(int i = 0 ; i < word.length() ; i++)
+        TrieNode *curr = root;
+        for(int i = 0 ; i < word.length(); i++)
         {
-            char ch = word[i];
-            r = r->in(ch);
+            int pos = word[i] - 'a';
+            if(curr->links[pos] == NULL)
+            {
+                TrieNode * newNode = new TrieNode();
+                curr->links[pos] = newNode;
+            }
+            curr = curr->links[pos];
         }
-        r->set();
+        curr->flag = true;
     }
     
     bool search(string word)
     {
-        TrieNode* r = t;
-        for(int i = 0 ; i < word.length() ; i++)
+        TrieNode *curr = root;
+        for(int i = 0 ; i < word.length(); i++)
         {
-            char ch = word[i];
-            r = r->nxt(ch);
-            if(r == NULL)
+            int pos = word[i] - 'a';
+            if(curr->links[pos] != NULL)
+            {
+                curr = curr->links[pos];
+            }
+            else
+            {
                 return false;
+            }
         }
-        if(r->flag == true)
-            return true;
-        else
-            return false;
+        return curr->flag;
     }
     
     bool startsWith(string prefix)
     {
-        TrieNode* r = t;
-        for(int i = 0 ; i < prefix.length() ; i++)
+       TrieNode *curr = root;
+        for(int i = 0 ; i < prefix.length(); i++)
         {
-            char ch = prefix[i];
-            r = r->nxt(ch);
-            if(r == NULL)
+            int pos = prefix[i] - 'a';
+            if(curr->links[pos] != NULL)
+            {
+                curr = curr->links[pos];
+            }
+            else
+            {
                 return false;
+            }
         }
-            return true;
+        return true;
     }
 };
 
