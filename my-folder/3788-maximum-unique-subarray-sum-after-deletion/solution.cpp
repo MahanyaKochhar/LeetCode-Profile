@@ -1,30 +1,21 @@
 class Solution {
 public:
-    int maxSum(vector<int>& nums)
-    {
-        int maxi = -200;
+    int maxSum(vector<int>& nums) {
+        set<int>s;
+        int maxi = -101;
         for(auto x : nums)
         {
             maxi = max(maxi,x);
-        }
-        if(maxi <=0 )
-        {
-            return maxi;
-        }
-        else
-        {
-            int ans = 0;
-            vector<bool>vis(101,false);
-            for(auto x : nums)
+            if(x >= 0)
             {
-                if(x >= 0 && !vis[x])
-                {
-                    ans += x;
-                    vis[x] = true;
-                }
+                s.insert(x);
             }
-            return ans;
         }
-        return 0;
+        int sum = 0;
+        for(auto x : s)   
+        {
+            sum += x;
+        }
+        return s.size() != 0 ? sum : maxi;
     }
 };
