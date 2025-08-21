@@ -2,33 +2,39 @@ class Solution {
 public:
     int countSquares(vector<vector<int>>& matrix)
     {
-        vector<vector<int>>pre(matrix.size() + 1,vector<int>(matrix[0].size() + 1,0));
-        int cnt = 0;
-        for(int i = 1 ; i <= matrix.size(); i++)
+        vector<vector<int>>dp(matrix.size(),vector<int>(matrix[0].size(),0));
+        for(int i = 0 ; i < matrix.size(); i++)
         {
-            for(int j = 1 ; j <= matrix[0].size(); j++)
+            for(int j = 0 ; j < matrix[0].size(); j++)
             {
-                pre[i][j] = pre[i - 1][j] + pre[i][j - 1] + matrix[i - 1][j - 1] - pre[i - 1][j - 1];
+                if(matrix[i][j] == 1)
+                {
+                    dp[i][j] = 1;
+                }
             }
         }
 
-        for(int i = 1; i <= matrix.size(); i++)
+        for(int i = 1; i < matrix.size(); i++)
         {
-            for(int j = 1 ; j <= matrix[0].size();j++)
+            for(int j = 1; j < matrix[i].size(); j++)
             {
-                for(int k = 0 ; k < i ; k++)
+                if(matrix[i][j] == 1)
                 {
-                    if(i - k >= 1 && j - k >= 1)
+                    if(matrix[i - 1][j - 1] == 1 && matrix[i - 1][j] == 1 && matrix[i][j - 1] == 1)
                     {
-                        int sum = pre[i][j] - pre[i][j - k - 1] - pre[i - k - 1][j] + pre[i - k - 1][j - k - 1];
-                        if((k + 1) * (k + 1) == sum)
-                        {
-                            cnt++;
-                        }
+                        dp[i][j] +=  min(dp[i - 1][j],min(dp[i][j - 1],dp[i - 1][j - 1]));
                     }
                 }
             }
         }
-        return cnt;
+        int ans = 0;
+        for(int i = 0 ; i < matrix.size();i++)
+        {
+            for(int j = 0 ; j < matrix[i].size();j++)
+            {
+                ans += dp[i][j];
+            }
+        }
+        return ans;
     }
 };
