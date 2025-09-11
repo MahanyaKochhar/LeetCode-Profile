@@ -1,48 +1,76 @@
 class MedianFinder {
 public:
-    priority_queue<int>p;
-    priority_queue<int,vector<int>,greater<int>>q;
+    priority_queue<int>left;
+    priority_queue<int>right;
+
     MedianFinder()
     {
         
     }
-    
-    void addNum(int num)
+
+    void stabilize()
     {
-        if(p.size()==0)
-            p.push(num);
-        else if(num>=p.top())
+        if(left.size() > right.size())
         {
-            q.push(num);
-            if(q.size()-p.size()==2)
+            while(left.size() - right.size() > 1)
             {
-                int x=q.top();
-                q.pop();
-                p.push(x);
+                int t = left.top();
+                left.pop();
+                right.push(-t);
             }
         }
         else
         {
-            p.push(num);
-            if(p.size()-q.size()==2)
+            while(right.size() - left.size() > 1)
             {
-                int x=p.top();
-                p.pop();
-                q.push(x);
+                int t = right.top();
+                right.pop();
+                left.push(-t);
             }
         }
-            
+    }
+    
+    void addNum(int num)
+    {
+        if(left.empty())
+        {
+            left.push(num);
+        }
+        else
+        {
+            if(left.top() > num)
+            {
+                left.push(num);
+            }
+            else
+            {
+                right.push(-num);
+            }
+        }
+        int lsize = left.size();
+        int rsize = right.size();
+        int diff = abs(lsize - rsize);
+        if(diff > 1)
+            stabilize();
     }
     
     double findMedian()
     {
-        if(p.size()==q.size())
+        if(left.size() == right.size())    
         {
-            double fin=double(p.top()+double(q.top()))/2;
-            return fin;
+            return (double)(left.top() + -right.top()) / 2;
         }
         else
-            return (p.size()>q.size()? p.top():q.top());
+        {
+            if(left.size() > right.size())
+            {
+                return (double)left.top();
+            }
+            else
+            {
+                return (double)-right.top();
+            }
+        }
     }
 };
 
