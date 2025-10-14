@@ -6,7 +6,7 @@ public:
         {
             return 0;
         }
-        auto good = [&](long long v) -> bool {
+        auto good = [&](int v) -> bool {
             vector<vector<int>>adjlist(points.size());
             for(int i = 0 ; i < points.size(); i++)
             {
@@ -48,10 +48,10 @@ public:
             return valid;
         };
         
-        long long  l = 0,r = 1e11 + 1;
+        int l = 0,r = 4e8 + 1;
         while(l + 1 < r)
         {
-            long long mid = (l + r) / 2;
+            int mid = (l + r) / 2;
             if(good(mid))
             {
                 l = mid;
