@@ -2,20 +2,20 @@ class Solution {
 public:
     int countPermutations(vector<int>& complexity)
     {
+        int min = complexity[0];
         const int mod = 1e9 + 7;
-        for(int i = 1 ; i < complexity.size();i++)
+        for(int i = 1; i < complexity.size(); i++)
         {
-            if(complexity[0] >= complexity[i])
+            if(complexity[i] <= min)
             {
                 return 0;
             }
         }
-        int n = complexity.size();
-        long long fact = 1;
-        for(int j = 1 ; j < n ; j++)
+        long long ans = 1;
+        for(int i = 1 ; i < complexity.size() ; i++)
         {
-            fact = (fact % mod * j % mod) % mod;
+            ans = (ans * i) % mod;
         }
-        return (int)fact;
+        return ans;
     }
 };
