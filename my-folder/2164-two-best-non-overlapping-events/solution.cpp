@@ -2,35 +2,41 @@ class Solution {
 public:
     int maxTwoEvents(vector<vector<int>>& events)
     {
-        vector<pair<int,pair<int,int>>>pa;
-        for(int i=0;i<events.size();i++)
-        {
-            pa.push_back({events[i][0],{events[i][1],events[i][2]}});
-        }
-        sort(pa.begin(),pa.end());
-        vector<int>st,et,val;
-        for(int i=0;i<pa.size();i++)
-        {
-            st.push_back(pa[i].first);
-            et.push_back(pa[i].second.first);
-            val.push_back(pa[i].second.second);
-        }
-        vector<int>maxi(val.size()+1,0);
-        for(int j=val.size()-1;j>=0;j--)
-            maxi[j]=max(maxi[j+1],val[j]);
-        int fin=0;
-        for(int i=0;i<st.size();i++)
-        {
-            int ans=val[i];
-            int end=et[i];
-            auto it=upper_bound(st.begin(),st.end(),end);
-            if(it!=st.end())
+        int ans = 0;
+        vector<int>endS;
+        vector<int>pre;
+        int maxi = -1;
+        auto cmp = [&](vector<int>& a, vector<int>& b) -> bool {
+            if(a[1] == b[1])
             {
-                int idx=it-st.begin();
-                ans+=maxi[idx];
+                return a[0] < b[0];
             }
-            fin=max(fin,ans);
+            else
+            {
+                return a[1] < b[1];
+            }
+        };
+        sort(events.begin(), events.end(), cmp);
+        for(int i = 0 ; i < events.size() ; i++)
+        {
+            endS.push_back(events[i][1]);
+            pre.push_back(max(maxi,events[i][2]));
+            maxi = max(maxi,events[i][2]);
         }
-        return fin;
+        for(int i = 0 ; i < events.size() ; i++)
+        {
+            auto it = lower_bound(endS.begin(),endS.end(),events[i][0]);
+            if(it == endS.begin())
+            {
+                ans = max(ans,events[i][2]);
+            }
+            else
+            {
+                it--;
+                int idx = it - endS.begin();
+                ans = max(ans,events[i][2] + pre[idx]);
+            }
+        }
+        return ans;
     }
 };
