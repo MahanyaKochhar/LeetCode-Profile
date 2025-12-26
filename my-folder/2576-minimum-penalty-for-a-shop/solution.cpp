@@ -2,38 +2,28 @@ class Solution {
 public:
     int bestClosingTime(string customers)
     {
-        vector<int>pre(customers.length(),0);
-        for(int i=0;i<customers.length();i++)
+        vector<int>pre(customers.length() + 1,0);
+        vector<int>suff(customers.length() + 2,0);
+        for(int i = 1 ; i <= customers.length() ; i++)
         {
-            if(customers[i]=='Y')
+            pre[i] += pre[i - 1] + ((customers[i - 1] == 'N') ? 1 : 0);
+            suff[customers.length() - i + 1] += suff[customers.length() - i + 2] + ((customers[customers.length() - i] == 'Y') ? 1 : 0);
+        }
+        int ans = INT_MAX;
+        int fin = -1;
+        for(int i = 1 ; i <= customers.length() ; i++)
+        {
+            int pen = pre[i - 1] + suff[i];
+            if(pen < ans)
             {
-                pre[i]=((i==0)? 1:pre[i-1]+1);
+                ans = pen;
+                fin = i - 1;
             }
-            else
-                pre[i]=(i==0)?0:pre[i-1];
         }
-        
-        int fin=customers.length();
-        for(int i=0;i<customers.length();i++)
+        if(pre[customers.length()] < ans)
         {
-            int ans=(i)-((i==0)?0:pre[i-1]);
-            ans+=pre[customers.size()-1]-((i==0)?0:pre[i-1]);
-            fin=min(fin,ans);
+            fin = customers.length();
         }
-        if(customers.length()-pre[customers.size()-1]<fin)
-        {
-            return customers.length();
-        }
-        else
-        {
-            for(int i=0;i<customers.size();i++)
-        {
-                int ans=(i)-(i==0?0:pre[i-1]);
-                ans+=pre[customers.size()-1]-(i==0?0:pre[i-1]);
-                if(ans==fin)
-                    return i;
-        } 
-        }
-        return 0;
+        return fin;
     }
 };
