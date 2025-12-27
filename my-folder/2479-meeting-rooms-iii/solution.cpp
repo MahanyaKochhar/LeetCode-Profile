@@ -2,43 +2,47 @@ class Solution {
 public:
     int mostBooked(int n, vector<vector<int>>& meetings)
     {
-        sort(meetings.begin(),meetings.end());
+        using ll = long long;
         vector<int>ans(n,0);
-        vector<long long>rooms(n,0);
-        for(int i = 0 ; i < meetings.size();i++)
+        sort(meetings.begin(), meetings.end());
+        set<int>avl;
+        priority_queue<pair<ll,ll>> pq;
+        for(int i = 0 ; i < n; i++)
         {
-            int pick = -1;
-            for(int j = 0 ; j < rooms.size();j++)
+            avl.insert(i);
+        }
+
+        for(int i = 0 ; i < meetings.size() ; i++)
+        {
+            ll st = meetings[i][0];
+            ll end = meetings[i][1];
+            while(!pq.empty() && -pq.top().first <= st)
             {
-                if(meetings[i][0] >= rooms[j])
-                {
-                    pick = j;
-                    break;
-                }
+                avl.insert(-pq.top().second);
+                pq.pop();
             }
-            if(pick != -1)
+
+            if(avl.size() != 0)
             {
-                ans[pick]++;
-                rooms[pick] = meetings[i][1];
+                int room = *(avl.begin());
+                ans[room]++;
+                pq.push({-end,-room});
+                avl.erase(room);
             }
             else
             {
-                long long mini = 1e11;
-                for(int j = 0 ; j < rooms.size();j++)
-                {
-                    if(rooms[j] < mini)
-                    {
-                        mini = rooms[j];
-                        pick = j;
-                    }
-                }
-                ans[pick]++;
-                rooms[pick] = mini + meetings[i][1] - meetings[i][0];
+                auto poss = pq.top();
+                pq.pop();
+                ll time = -poss.first;
+                ll room = -poss.second;
+                ll dur = end - st;
+                ans[room]++;
+                pq.push({-(time + dur),-room});
             }
         }
-        int fin = -1;
-        int room = 0;
-        for(int i = 0 ; i < ans.size();i++)
+        int fin = INT_MIN;
+        int room = -1;
+        for(int i = 0 ; i < ans.size(); i++)
         {
             if(ans[i] > fin)
             {
