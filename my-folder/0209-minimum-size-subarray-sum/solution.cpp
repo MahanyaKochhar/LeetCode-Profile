@@ -8,12 +8,13 @@ public:
         for(int r = 0 ; r < nums.size();r++)
         {
             sum += nums[r];
-            while(sum >= target)
+            while(sum - nums[l] >= target)
             {
-                ans = min(ans, r - l + 1);
                 sum -= nums[l];
                 l++;
             }
+            if(sum >= target)
+                ans = min(ans, r - l + 1);
         }
         return ans == 1e6 ? 0 : ans;
     }
