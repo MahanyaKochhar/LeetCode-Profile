@@ -11,28 +11,33 @@
  */
 class Solution {
 public:
-    long long int ans=0;
-    const int mod=1e9+7;
-    int subSum(TreeNode* root)
-    {
-        if(root==NULL)
-            return 0;
-        return root->val+subSum(root->left)+subSum(root->right);
-    }
-    int findAns(TreeNode* root,int val1)
-    {
-        if(root==NULL)
-            return 0;
-        int curr=root->val+findAns(root->left,val1)+findAns(root->right,val1);
-        int val2=val1-curr;
-        ans=max(ans,(long long int)val2*curr);
-        return curr;
-    }
     int maxProduct(TreeNode* root)
     {
-        int val1=subSum(root);
-        findAns(root,val1);
-        int fin=ans%mod;
-        return fin;
+        using ll = long long;
+        map<TreeNode*,int>mp;
+        const int mod = 1e9 + 7;
+        auto dfs = [&](auto self,TreeNode* node) -> void
+        {
+            mp[node] = node->val;
+            if(node->left != NULL)
+            {
+                self(self,node->left);
+                mp[node] += mp[node->left];
+            }
+            if(node->right != NULL)
+            {
+                self(self,node->right);
+                mp[node] += mp[node->right];
+            }
+        };
+        dfs(dfs,root);
+        int total = mp[root];
+        ll maxi = 0;
+        for(auto& [k,v] : mp)
+        {
+            int rest = total - v;
+            maxi = max(maxi,(ll)rest * (ll)v);
+        }
+        return maxi % mod;
     }
 };
